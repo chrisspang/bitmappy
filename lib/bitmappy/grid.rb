@@ -22,7 +22,7 @@ class Grid
   end
 
   def to_s
-    @grid.collect { |row| row.join("") }.join("")
+    @grid.collect { |row| row.join("") }.join("\n")
   end
 
   private

@@ -24,7 +24,7 @@ class Bitmap
   end
 
   def paint_pixel(x, y, c)
-
+    @grid.set_value_at_point(x, y, c)
   end
 
   def paint_vertical(x, y1, y2, c)
