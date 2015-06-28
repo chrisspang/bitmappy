@@ -80,4 +80,11 @@ class BitmapTest < Minitest::Test
     assert_equal 'FFFFVOOOOOFPFFVOOOOOFFFFVOOOOOFFFFVOOOOOHHHHVHHHHHOOOOVOOOOOOOOOVOOOOOOOOOVOOOOOOOOOVOOOOOOOOOVOOOOO', filled_grid
   end
 
+  # Ensure we don't allow fills of the current colour at x,y
+  def test_fill_same_colour
+    assert_raises StandardError do
+      @small_bitmap.fill(1, 1, 'O')
+    end
+  end
+
 end

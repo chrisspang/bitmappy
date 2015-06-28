@@ -45,6 +45,9 @@ class Bitmap
   def fill(x, y, c)
     validate_colour(c)
     original_colour = @grid.get_value_at_point(x, y)
+
+    raise "New colour must be different from current one at #{x},#{y}" if c == original_colour
+
     recursive_fill(x, y, c, original_colour)
   end
 
