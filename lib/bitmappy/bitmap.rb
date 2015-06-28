@@ -24,25 +24,33 @@ class Bitmap
   end
 
   def paint_pixel(x, y, c)
+    validate_colour(c)
     @grid.set_value_at_point(x, y, c)
   end
 
   def paint_vertical(x, y1, y2, c)
+    validate_colour(c)
     y1, y2 = [ y1, y2 ].minmax
     (y1..y2).each { |y| @grid.set_value_at_point(x, y, c) }
   end
 
   def paint_horizontal(x1, x2, y, c)
+    validate_colour(c)
     x1, x2 = [ x1, x2 ].minmax
     (x1..x2).each { |x| @grid.set_value_at_point(x, y, c) }
   end
 
   def fill(x, y, c)
+    validate_colour(c)
     original_colour = @grid.get_value_at_point(x, y)
     recursive_fill(x, y, c, original_colour)
   end
 
   private
+
+  def validate_colour(c)
+    raise ArgumentError, "#{c} is not a valid colour" unless c =~ /\A[A-Z]\z/
+  end
 
   # Recursively fill outwards from the initial point
   def recursive_fill(x, y, colour, original_colour)
