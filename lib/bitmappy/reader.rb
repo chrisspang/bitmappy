@@ -10,41 +10,49 @@ class Reader
 
   def read_command_loop
 
-    ## Simple debugging
-    puts "10x5 grid"
-    @bitmap = Bitmap.new(10,5)
+    if false
+      ## Simple debugging
+      puts "10x5 grid"
+      @bitmap = Bitmap.new(10,5)
 
-    puts "S (show)"
-    puts @bitmap.to_s
+      puts "S (show)"
+      puts @bitmap.to_s
 
-    puts "L 1 2 X (paint pixel)"
-    @bitmap.paint_pixel(1, 2, 'X')
+      puts "L 1 2 X (paint pixel)"
+      @bitmap.paint_pixel(1, 2, 'X')
 
-    puts "S (show)"
-    puts @bitmap.to_s
+      puts "S (show)"
+      puts @bitmap.to_s
 
-    puts "V X Y1 Y2 C (paint vertical)"
-    @bitmap.paint_vertical(7, 2, 3, 'V')
+      puts "V X Y1 Y2 C (paint vertical)"
+      @bitmap.paint_vertical(7, 1, 5, 'V')
 
-    puts "V X Y1 Y2 C (paint vertical)"
-    @bitmap.paint_vertical(8, 3, 2, 'A')
+      puts "V X Y1 Y2 C (paint vertical)"
+      @bitmap.paint_vertical(8, 3, 2, 'A')
 
-    puts "S (show)"
-    puts @bitmap.to_s
+      puts "S (show)"
+      puts @bitmap.to_s
 
-    puts "H X1 X2 Y C (paint horizontal)"
-    @bitmap.paint_horizontal(2, 9, 5, 'H')
+      puts "H X1 X2 Y C (paint horizontal)"
+      @bitmap.paint_horizontal(2, 9, 5, 'H')
+      
+      puts "S (show)"
+      puts @bitmap.to_s
+      
+      puts "F X Y C (fill region)"
+      @bitmap.fill(4, 4, 'F')
+      
+      puts "S (show)"
+      puts @bitmap.to_s
+      
+      puts "F X Y C (fill region)"
+      @bitmap.fill(8, 4, '8')
 
-    puts "S (show)"
-    puts @bitmap.to_s
+      puts "S (show)"
+      puts @bitmap.to_s
+      return
+    end
 
-    puts "F X Y C (fill region)"
-    @bitmap.fill(4, 4, 'F')
-
-    puts "S (show)"
-    puts @bitmap.to_s
-
-    return
     print ">"
     ARGF.each_with_index do |line, idx|
       begin
@@ -56,52 +64,99 @@ class Reader
     end
   end
 
-  private
-
   def handle_input(line)
-    ## Do something or error
+    # Note: We don't left strip due to the specification
+    # "command is [...] capital letter at the beginning of the line"
+    command, *args = line.rstrip.split(/\s+/)
+    return if !command
+
+    run_command(command, args)
   end
+
+  private
 
   # Commands
 
   # Create
-  def cmd_I
-
+  def cmd_I(width, height)
+    @bitmap = Bitmap.new(width, height)
   end
 
   # Clear
   def cmd_C
-
+    @bitmap.reset_grid
   end
 
   # Paint Pixel
-  def cmd_L
-
+  def cmd_L(x, y, c)
+    @bitmap.paint_pixel(x, y, c)
   end
 
   # Paint vertical
-  def cmd_V
-
+  def cmd_V(x, y1, y2, c)
+    @bitmap.paint_vertical(x, y1, y2, c)
   end
 
   # Paint horizontal
-  def cmd_H
-
+  def cmd_H(x1, x2, y, c)
+    @bitmap.paint_horizontal(x1, x2, y, c)
   end
 
   # Fill Region
-  def cmd_F
-
+  def cmd_F(x, y, c)
+    @bitmap.fill(x, y, c)
   end
 
   # Show Image
   def cmd_S
-
+    puts @bitmap.to_s
   end
 
   # Exit
   def cmd_X
     exit
+  end
+
+  # Validation commands and parameters
+  def validate_params(wanted, got)
+    arg_regex = {
+      :integer   => /\A\d+\z/,     # Integer (not range checked here)
+      :character => /\A[A-Z]\z/,   # Upper case letter
+    }
+
+    raise ArgumentError, "Bad arguments for command" if (wanted.length != got.length)
+
+    actual_params = Array.new
+
+    wanted.zip(got).each do |a,b|
+      raise ArgumentError, "Bad argument '#{b}'" unless arg_regex[a] =~ b
+      actual_params.push(a == :integer ? b.to_i : b.to_s)
+    end
+
+    return actual_params
+  end
+
+  # Validate command and parameters are good, run the command
+  def run_command(cmd, args)
+    valid_commands = {
+      'I' => [ :integer, :integer ],                        # I X Y
+      'C' => [],                                            # C
+      'L' => [ :integer, :integer, :character ],            # L X Y C
+      'V' => [ :integer, :integer, :integer, :character ],  # V X Y1 Y2 C
+      'H' => [ :integer, :integer, :integer, :character ],  # H X1 X2 Y C
+      'F' => [ :integer, :integer, :character ],            # F X Y C
+      'S' => [],                                            # S
+      'X' => [],                                            # X
+    }
+
+    raise "Invalid command" unless valid_commands.has_key?(cmd)
+
+    valid_params = validate_params(valid_commands[cmd], args)
+
+    method = "cmd_#{cmd}".to_sym
+
+#    p method, valid_params
+    self.send(method, *valid_params)
   end
 
 end
