@@ -46,4 +46,19 @@ class ReaderTest < Minitest::Test
     end
   end
 
+  def test_handle_input_junk
+    junk = [
+            " asd9f8asdfbasdf b 9^$*(^&V",
+            "           I          5 6    ",
+            "L 1 2 \u2028",
+            "some ctrl [\1\2\3\4\5\6] characters",
+            "& * & *) % (* %",
+            # etc
+           ];
+    junk.each do |j|
+      assert_raises StandardError do
+        @reader.handle_input(j)
+      end
+    end
+  end
 end
