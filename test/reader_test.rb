@@ -34,4 +34,16 @@ class ReaderTest < Minitest::Test
       @reader.handle_input('I 5')
     end
   end
+
+  def test_validate_bitmap_exists_good
+    @reader.handle_input('I 6 6')
+    @reader.handle_input('L 1 1 L')
+  end
+
+  def test_validate_bitmap_exists_bad
+    assert_raises StandardError do
+      @reader.handle_input('L 1 1 L')
+    end
+  end
+
 end

@@ -117,6 +117,11 @@ class Reader
     exit
   end
 
+  # Validate a bitmap has been created
+  def validate_bitmap
+    raise "Create a bitmap first" unless @bitmap
+  end
+
   # Validation commands and parameters
   def validate_params(wanted, got)
     arg_regex = {
@@ -154,6 +159,9 @@ class Reader
     valid_params = validate_params(valid_commands[cmd], args)
 
     method = "cmd_#{cmd}".to_sym
+
+    # All methods other than 'I' require us to have created a bitmap
+    validate_bitmap() unless (cmd.eql?('I'))
 
 #    p method, valid_params
     self.send(method, *valid_params)
