@@ -13,10 +13,34 @@ class Reader
     ## Simple debugging
     puts "10x5 grid"
     @bitmap = Bitmap.new(10,5)
+
     puts "S (show)"
     puts @bitmap.to_s
+
     puts "L 1 2 X (paint pixel)"
     @bitmap.paint_pixel(1, 2, 'X')
+
+    puts "S (show)"
+    puts @bitmap.to_s
+
+    puts "V X Y1 Y2 C (paint vertical)"
+    @bitmap.paint_vertical(7, 2, 3, 'V')
+
+    puts "V X Y1 Y2 C (paint vertical)"
+    @bitmap.paint_vertical(8, 3, 2, 'A')
+
+    puts "S (show)"
+    puts @bitmap.to_s
+
+    puts "H X1 X2 Y C (paint horizontal)"
+    @bitmap.paint_horizontal(2, 9, 5, 'H')
+
+    puts "S (show)"
+    puts @bitmap.to_s
+
+    puts "F X Y C (fill region)"
+    @bitmap.fill(4, 4, 'F')
+
     puts "S (show)"
     puts @bitmap.to_s
 
