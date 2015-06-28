@@ -119,12 +119,11 @@ class Reader
 
     valid_params = validate_params(valid_commands[cmd], args)
 
+    # Most methods require us to have created a bitmap
+    validate_bitmap() if %w( C L V H F S ).include?(cmd)
+
     method = "cmd_#{cmd}".to_sym
-
-    # All methods other than 'I' require us to have created a bitmap
-    validate_bitmap() unless (cmd.eql?('I'))
-
-#    p method, valid_params
+    #    p method, valid_params
     self.send(method, *valid_params)
   end
 
