@@ -1,6 +1,9 @@
 
 # Bitmap class for handling the image
 
+# 1-based coordinate system (the Grid class handles the underlying grid
+# implementation and transformations)
+
 class Bitmap
   attr_accessor :width, :height, :grid
 
@@ -9,10 +12,15 @@ class Bitmap
     reset_grid()
   end
 
+  def to_s
+    @grid.to_s if @grid
+  end
+
   # API calls
 
   def reset_grid
-    @grid = Array.new(@height) { Array.new(@width) { 'O' } }
+#    @grid = Array.new(@height) { Array.new(@width) { 'O' } }
+    @grid = Grid.new(@width, @height)
   end
 
   def paint_pixel(x, y, c)

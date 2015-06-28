@@ -1,5 +1,6 @@
 require "bitmappy/version"
 
+require 'bitmappy/grid'
 require 'bitmappy/bitmap'
 require 'bitmappy/reader'
 
