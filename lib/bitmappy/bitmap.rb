@@ -38,8 +38,22 @@ class Bitmap
   end
 
   def fill(x, y, c)
-
+    original_colour = @grid.get_value_at_point(x, y)
+    recursive_fill(x, y, c, original_colour)
   end
 
+  private
+
+  # Recursively fill outwards from the initial point
+  def recursive_fill(x, y, colour, original_colour)
+    #    puts "Setting #{x},#{y} to #{colour}"
+    @grid.set_value_at_point(x, y, colour)
+
+    points = @grid.all_touching_points(x, y)
+    points.each do |p|
+      col = @grid.get_value_at_point(p[0], p[1])
+      recursive_fill(p[0], p[1], colour, original_colour) if (col == original_colour)
+    end
+  end
 end
 

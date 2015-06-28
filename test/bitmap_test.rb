@@ -70,7 +70,14 @@ class BitmapTest < Minitest::Test
   end
 
   def test_fill
-
+    @large_bitmap.paint_horizontal(1, 10, 5, 'H')
+    @large_bitmap.paint_vertical(5, 1, 10, 'V')
+    @large_bitmap.paint_pixel(2, 2, 'P')
+    grid = @large_bitmap.grid.to_s.gsub(/\n/, '')
+    assert_equal 'OOOOVOOOOOOPOOVOOOOOOOOOVOOOOOOOOOVOOOOOHHHHVHHHHHOOOOVOOOOOOOOOVOOOOOOOOOVOOOOOOOOOVOOOOOOOOOVOOOOO', grid
+    @large_bitmap.fill(3, 4, 'F')
+    filled_grid = @large_bitmap.grid.to_s.gsub(/\n/, '')
+    assert_equal 'FFFFVOOOOOFPFFVOOOOOFFFFVOOOOOFFFFVOOOOOHHHHVHHHHHOOOOVOOOOOOOOOVOOOOOOOOOVOOOOOOOOOVOOOOOOOOOVOOOOO', filled_grid
   end
 
 end
