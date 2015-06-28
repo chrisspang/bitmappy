@@ -28,11 +28,13 @@ class Bitmap
   end
 
   def paint_vertical(x, y1, y2, c)
-
+    y1, y2 = [ y1, y2 ].minmax
+    (y1..y2).each { |y| @grid.set_value_at_point(x, y, c) }
   end
 
   def paint_horizontal(x1, x2, y, c)
-
+    x1, x2 = [ x1, x2 ].minmax
+    (x1..x2).each { |x| @grid.set_value_at_point(x, y, c) }
   end
 
   def fill(x, y, c)
