@@ -1,5 +1,12 @@
 #!/usr/bin/env ruby
+#
+# bitmappy: Interactive bitmap editor
+#
 
 #
 # This will be the script
 #
+
+require 'bitmappy'
+
+Bitmappy.read_input_forever
