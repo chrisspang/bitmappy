@@ -2,10 +2,12 @@
 # Reader class to handle parsing input
 
 class Reader
-  attr_accessor :bitmap
+  attr_accessor :bitmap, :snapshots, :current_snapshot
 
   def initialize
     @bitmap = nil
+    @snapshots = Array.new
+    @current_snapshot = nil
   end
 
   def read_command_loop
@@ -78,9 +80,41 @@ class Reader
     exit
   end
 
+  # Undo
+  def cmd_U
+    # Make sure we don't try to save the result of this action
+    @current_snapshot = nil
+
+    raise "No undos left" if @snapshots.length == 0
+
+    last_snapshot = @snapshots.pop
+    @bitmap = Bitmap.new(1, 1)  # Size will be overwritten
+    @bitmap.load_from_json(last_snapshot)
+  end
+
+  # Save our current state into current_snapshot
+  def create_snapshot
+    @current_snapshot = @bitmap.to_json if @bitmap
+  end
+
+  # Save the current_snapshot if our state has changed
+  def save_snapshot
+    return unless @current_snapshot
+    current_state = @bitmap.to_json
+    return if snapshots_match?(@current_snapshot, current_state)
+
+    @snapshots << @current_snapshot
+  end
+
   # Validate a bitmap has been created
   def validate_bitmap
     raise "Create a bitmap first" unless @bitmap
+  end
+
+  ## Snapshots are just JSON so quick and dirty solution is just to
+  ## compare them (assume key ordering is consistent...)
+  def snapshots_match?(s1, s2)
+    s1 == s2
   end
 
   # Validation commands and parameters
@@ -113,6 +147,8 @@ class Reader
       'F' => [ :integer, :integer, :character ],            # F X Y C
       'S' => [],                                            # S
       'X' => [],                                            # X
+
+      'U' => [],                                            # U
     }
 
     raise "Invalid command" unless valid_commands.has_key?(cmd)
@@ -122,9 +158,13 @@ class Reader
     # Most methods require us to have created a bitmap
     validate_bitmap() if %w( C L V H F S ).include?(cmd)
 
+    create_snapshot()
+
     method = "cmd_#{cmd}".to_sym
     #    p method, valid_params
     self.send(method, *valid_params)
+
+    save_snapshot()
   end
 
 end

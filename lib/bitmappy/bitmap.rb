@@ -4,6 +4,8 @@
 # 1-based coordinate system (the Grid class handles the underlying grid
 # implementation and transformations)
 
+require 'json'
+
 class Bitmap
   attr_accessor :width, :height, :grid
 
@@ -44,6 +46,22 @@ class Bitmap
     validate_colour(c)
     original_colour = @grid.get_value_at_point(x, y)
     recursive_fill(x, y, c, original_colour)
+  end
+
+  def to_json
+    return JSON.pretty_generate({
+                                  :height => @height,
+                                  :width  => @width,
+                                  :grid   => @grid.grid
+                                })
+  end
+
+  def load_from_json(serialized)
+    data = JSON.parse(serialized)
+    @height = data['height']
+    @width  = data['width']
+    @grid   = Grid.new(@width, @height)
+    @grid.grid = data['grid']
   end
 
   private
