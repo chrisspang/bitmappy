@@ -25,6 +25,7 @@ As desired, some combination of:
 
 Then play with bitmappy:
 
+```
 $ bitmappy
 > I 5 6
 > L 2 3 A
@@ -46,6 +47,7 @@ JWJJJ
 JJJJJ
 JJJJJ
 > X
+```
 
 ## Extra Feature
 
