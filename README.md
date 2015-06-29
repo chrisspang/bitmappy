@@ -1,39 +1,137 @@
 # Bitmappy
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/bitmappy`. To experiment with that code, run `bin/console` for an interactive prompt.
+https://travis-ci.org/chrisspang/bitmappy.svg?branch=master
 
-TODO: Delete this and the text above, and describe your gem
+## Installation (rvm)
 
-## Installation
+Install ruby 2.0, create temporary gemset, etc:
 
-Add this line to your application's Gemfile:
+    $ rvm install 2.0
+    $ rvm use 2.0
+    $ rvm gemset create testytest
+    $ rvm gemset use testytest
 
-```ruby
-gem 'bitmappy'
-```
-
-And then execute:
-
+    $ gem install bundler
     $ bundle
 
-Or install it yourself as:
+Run tests if you so desire:    
+    
+    $ rake test
 
-    $ gem install bitmappy
+As desired, some combination of:
 
-## Usage
+    $ rake build
+    $ rake install
 
-TODO: Write usage instructions here
+Then play with bitmappy:
 
-## Development
+$ bitmappy
+> I 5 6
+> L 2 3 A
+> S
+OOOOO
+OOOOO
+OAOOO
+OOOOO
+OOOOO
+OOOOO
+> F 3 3 J
+> V 2 3 4 W
+> H 3 4 2 Z
+> S
+JJJJJ
+JJZZJ
+JWJJJ
+JWJJJ
+JJJJJ
+JJJJJ
+> X
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+## Extra Feature
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+This version of the basic interactive bitmap editor has an exciting new feature.. UNDO!
 
-## Contributing
+Use the command 'U' command to roll back your last changes, all the way back to your first
+bitmap creation ('I' command).  Use it once, use it forever (or until you run out of memory).
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/bitmappy.
+Example:
 
+```
+> I 10 10
+> F 1 1 I
+> H 1 10 1 A
+> H 1 10 10 A
+> V 1 1 10 A
+> V 10 10 1 A
+> H 3 8  3 B
+> H 3 8 8 B
+> V 3 3 8 B
+> V 8 8 3 B
+> F 5 5 X
+> S
+AAAAAAAAAA
+AIIIIIIIIA
+AIBBBBBBIA
+AIBXXXXBIA
+AIBXXXXBIA
+AIBXXXXBIA
+AIBXXXXBIA
+AIBBBBBBIA
+AIIIIIIIIA
+AAAAAAAAAA
+> C
+```
+
+ OOPS!
+
+```
+> S
+OOOOOOOOOO
+OOOOOOOOOO
+OOOOOOOOOO
+OOOOOOOOOO
+OOOOOOOOOO
+OOOOOOOOOO
+OOOOOOOOOO
+OOOOOOOOOO
+OOOOOOOOOO
+OOOOOOOOOO
+> U
+> S
+AAAAAAAAAA
+AIIIIIIIIA
+AIBBBBBBIA
+AIBXXXXBIA
+AIBXXXXBIA
+AIBXXXXBIA
+AIBXXXXBIA
+AIBBBBBBIA
+AIIIIIIIIA
+AAAAAAAAAA
+```
+
+ YAY!
+
+ You can keep going if you like:
+
+```
+> U
+> U
+> U
+> U
+> U
+> S
+AAAAAAAAAA
+AIIIIIIIII
+AIIIIIIIII
+AIIIIIIIII
+AIIIIIIIII
+AIIIIIIIII
+AIIIIIIIII
+AIIIIIIIII
+AIIIIIIIII
+AAAAAAAAAA
+```
 
 ## License
 
