@@ -1,6 +1,6 @@
 # Bitmappy
 
-https://travis-ci.org/chrisspang/bitmappy.svg?branch=master
+[![Build Status](https://travis-ci.org/chrisspang/bitmappy.svg?branch=master)](https://travis-ci.org/chrisspang/bitmappy)
 
 ## Installation (rvm)
 
